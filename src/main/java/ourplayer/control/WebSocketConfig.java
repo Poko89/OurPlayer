@@ -12,7 +12,9 @@ import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 import ourplayer.control.utils.ServletUtils;
 
 import java.security.Principal;
+import java.text.MessageFormat;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by leppa on 3/30/2016.
@@ -30,8 +32,40 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer{
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/connect").withSockJS();
-//        registry.addEndpoint("/connect").setHandshakeHandler(new UserHandshakeHandler()).withSockJS();
+//        registry.addEndpoint("/connect").withSockJS();
+        registry.addEndpoint("/connect").setHandshakeHandler(new RandomUsernameHandshakeHandler()).withSockJS();
+    }
+
+    private class RandomUsernameHandshakeHandler extends DefaultHandshakeHandler {
+
+        private String[] adjectives = {
+                "aggressive", "annoyed", "funny", "proud", "crazy", "sleepy",
+                "angry", "inventive", "little", "short", "impressive", "chubby"
+        };
+        private String[] nouns = {
+                "kitten", "puppie", "zeebra", "tiger", "panther", "cow",
+                "wood-pecker", "polar-bear", "snake", "spider", "dinosaur", "elephant"
+        };
+
+        @Override
+        protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
+            String username = MessageFormat.format("{0}-{1}-{2}",
+                    getRandomUserName(adjectives),
+                    getRandomUserName(nouns),
+                    getRandomInt(100));
+
+            return () -> username;
+        }
+
+        private String getRandomUserName(String[] arr) {
+            int i = getRandomInt(arr.length);
+
+            return arr[i];
+        }
+
+        private Integer getRandomInt(int limit) {
+            return new Random().nextInt(limit);
+        }
     }
 
 //    private class UserHandshakeHandler extends DefaultHandshakeHandler {
