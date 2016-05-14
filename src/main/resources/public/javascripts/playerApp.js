@@ -1,17 +1,13 @@
 var stompClient = null;
 var video;
+var subscibtion;
+var clientID;
 
 $(function(){
     video = $("#video")[0];
+    video.oncanplay = onCanPlay;
     $('#playButton')[0].onclick = onPlayPressed;
     $('#pauseButton')[0].onclick = onPausePressed;
-
-    //$.ajax({
-    //    url: "/session",
-    //    context: "Subscibe to session"
-    //}).done(function() {
-    //    console.log("HttpSession subscribed");
-    //});
 
     disconnect();
     connect();
@@ -22,18 +18,20 @@ function connect(){
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame){
         console.log("Connected: " + frame);
-        stompClient.subscribe('/topic/videoplayer', function(message) {
-            console.log("Server sent:" + message.body);
-            if(message !== undefined){
-                if(message.body === "Play") {
-                    video.play();
-                }
-                else if(message.body === "Pause") {
-                    video.pause();
-                }
-            }
-        });
+        subscibtion = stompClient.subscribe('/topic/videoplayer', subscribtionCallBack);
     });
+}
+
+function subscribtionCallBack(message, headers) {
+    console.log("Server sent:" + message.body);
+    if(message !== undefined){
+        if(message.body === "Play") {
+            video.play();
+        }
+        else if(message.body === "Pause") {
+            video.pause();
+        }
+    }
 }
 
 function disconnect(){
@@ -44,6 +42,10 @@ function disconnect(){
     console.log("Disconnected");
 }
 
+function onCanPlay(){
+    stompClient.send('/app/canplay');
+}
+
 function onPlayPressed(){
     stompClient.send('/app/play');
 }
@@ -52,5 +54,8 @@ function onPausePressed(){
     stompClient.send('/app/pause');
 }
 
+//var VideoSubscriberData = {
+//    username : username,
+//}
 
 

@@ -3,6 +3,8 @@ package ourplayer.control;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.session.web.socket.config.annotation.AbstractSessionWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -22,7 +24,9 @@ import java.util.Random;
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer{
+public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+
+    private WebSocketSessionHandler webSocketSessionHandler = WebSocketSessionHandler.getInstance();
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -32,7 +36,6 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer{
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-//        registry.addEndpoint("/connect").withSockJS();
         registry.addEndpoint("/connect").setHandshakeHandler(new RandomUsernameHandshakeHandler()).withSockJS();
     }
 
@@ -53,6 +56,10 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer{
                     getRandomUserName(adjectives),
                     getRandomUserName(nouns),
                     getRandomInt(100));
+
+            webSocketSessionHandler.getSubscribers().put(username, new VideoSubsciberData(username));
+
+            //attributes.put("username", username);
 
             return () -> username;
         }
