@@ -4,8 +4,7 @@ var clientID;
 
 var video;
 var videoControls;
-var playButton;
-var pauseButton;
+var playPauseButton;
 var stopButton;
 var muteButton;
 var volumeinc;
@@ -24,8 +23,7 @@ function initializePlayer(){
     video = $('#video')[0];
     videoControls = $('#video-controls')[0];
 
-    playButton = $('#play-button')[0];
-    pauseButton = $('#pause-button')[0];
+    playPauseButton = $('#play-pause-button')[0];
     stopButton = $('#stop-button')[0];
     muteButton = $('#mute-button')[0];
     volumeinc = $('#vol-inc-button')[0];
@@ -36,8 +34,7 @@ function initializePlayer(){
     video.controls = false;
 
     video.oncanplay = onCanPlay;
-    playButton.onclick = onPlayPressed;
-    pauseButton.onclick = onPausePressed;
+    playPauseButton.onclick = togglePlay;
     stopButton.onclick = onStopPressed;
     muteButton.onclick = toggleMute;
     video.ontimeupdate = updateProgressBar;
@@ -85,6 +82,16 @@ function toggleMute(){
     } else{
         changeButtonType(muteButton, 'unmute');
         video.muted = true;
+    }
+}
+
+function togglePlay(){
+    if (video.paused){
+        changeButtonType(playPauseButton, 'play');
+        onPlayPressed();
+    } else{
+        changeButtonType(playPauseButton, 'pause');
+        onPausePressed();
     }
 }
 

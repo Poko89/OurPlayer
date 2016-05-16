@@ -7,10 +7,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.0.3/sockjs.min.js"></script>
-
-        <!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-        <script src="https://code.angularjs.org/1.4.8/angular-route.min.js"></script>
-        <script src="http://angular-ui.github.io/ui-router/release/angular-ui-router.min.js"></script>-->
         <script src="/javascripts/playerApp.js"></script>
     </head>
     <body>
@@ -21,13 +17,13 @@
             <button id="pauseButton" type="button">Pause</button>-->
             <video id="video"  class="player" autobuffer preload="auto" width="720" height="400" data-setup="{}">
                 <source src='http://vjs.zencdn.net/v/oceans.mp4' type='video/mp4'>
+                <p>Your browser does not support the video tag.</p>
             </video>
             <div id="video-controls" class="controls">
-                <button id="play-button" type="button" class="play" title="play">Play</button>
-                <button id="pause-button" type="button" class="pause" title="pause">Pause</button>
-                <button id="stop-button" type="button" class="stop" title="stop">Stop</button>
+                <button id="play-pause-button" type="button" class="play" title="play">play</button>
+                <button id="stop-button" type="button" class="stop" title="stop">stop</button>
                 <progress id='progress-bar' min='0' max='100' value='0'>0% played</progress>
-                <button id="mute-button" type="button" class="mute" title="mute">Mute</button>
+                <button id="mute-button" type="button" class="mute" title="mute">mute</button>
                 <button id="vol-inc-button" type="button" class='volume-plus' title='increase volume' onclick='onVolumeChanged("+");'>Vol+</button>
                 <button id="vol-dec-button" type="button" class='volume-minus' title='deccrease volume' onclick='onVolumeChanged("-");'>Vol-</button>
                 <button id="fullscreen" type="button" class='full-screen' title='full screen'>Fullscreen</button>
